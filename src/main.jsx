@@ -82,6 +82,7 @@ import {PasswordReset} from './UserPage/resetPassword.jsx'
 import OtpVerify from './SignIn/otpVerification.jsx'
 import ForgotPassword from './SignIn/forgotPassword.jsx'
 import { AdminRoute } from "./adminRoute/adminRoute.jsx";
+import UpdateCommittee from "./UpdateCommittee/UpdateCommittee.jsx";
 
 
 
@@ -351,6 +352,12 @@ const router = createBrowserRouter([
         path: '/addBanner',
         element: <AdminRoute>
           <AddBanner />
+          </AdminRoute>
+      },
+      {
+        path: '/updateCommittee',
+        element: <AdminRoute>
+          <UpdateCommittee />
           </AdminRoute>
       }
 

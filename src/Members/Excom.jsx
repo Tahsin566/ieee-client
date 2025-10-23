@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from '../../constants';
 import { Link } from 'react-router-dom';
+import { useUser } from '../../hooks/useUser';
+import { toast } from 'react-toastify';
 
 const Excom = () => {
+    const { user, getUser } = useUser();
     const teamMembers = [
         { name: 'Mahfuz Alam Chowdhury', role: 'Chairperson', image: 'https://i.ibb.co.com/gFSpDXMQ/Mahfuz.jpg', fb: 'https://www.facebook.com/share/16MJ91wAbX/', li: 'https://www.linkedin.com/in/md-mahfuz-alam-chowdhury-b25023235?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' },
         { name: 'Zuhaer Tanzim', role: 'Vice Chairperson', image: 'https://i.ibb.co.com/Jw5c8r4t/IMG-20250426-022010-473-1.webp', fb: 'https://www.facebook.com/share/1EMPEfL34h/', li: 'https://www.linkedin.com/in/zuhaer-tanzim-737aa223a/' },
@@ -13,11 +16,11 @@ const Excom = () => {
     const [Excomm, setExcomm] = useState([])
 
     const getallExcom = async () => {
-        
+
         try {
             const response = await fetch(`${BASE_URL}/committee/excom`)
             const data = await response.json()
-            if(!data.success) return toast.error(data.message)
+            if (!data.success) return toast.error(data.message)
             console.log(data.excom)
             setExcomm(data.excom)
         } catch (error) {
@@ -27,13 +30,14 @@ const Excom = () => {
 
     useEffect(() => {
         getallExcom()
+        getUser()
     }, [])
 
-    const MemberCard = ({ name, designation, info, hosted_image, facebook, linkedin,IEEEID }) => (
+    const MemberCard = ({ name, designation, info, hosted_image, facebook, linkedin, IEEEID, _id }) => (
         <div className="p-6 text-center flex-grow">
             <div className="shadow-md p-4 mx-auto w-fit px-5">
                 <Link to={`/details?id=${IEEEID}&name=${name}`} >
-                <img src={hosted_image || ''} alt={name} className="w-[200px] h-[200px] mx-auto mb-3 object-cover" loading="lazy" />
+                    <img src={hosted_image || ''} alt={name} className="w-[200px] h-[200px] mx-auto mb-3 object-cover" loading="lazy" />
                 </Link>
                 <h3 className="text-xl font-bold">{name}</h3>
                 <span className="text-[#045C99]">{designation}</span>
@@ -42,6 +46,16 @@ const Excom = () => {
                     <a target='_blank' href={facebook} className="text-black hover:text-[#045C99] px-2"><i className="fa-brands fa-facebook"></i></a>
                     <a target='_blank' href={linkedin} className="text-black hover:text-[#045C99] px-2"><i className="fa-brands fa-linkedin"></i></a>
                 </div>
+                {user?.role === 'admin' && (
+                    <div className="mt-3">
+                        <Link
+                            to={`/updateCommittee?id=${_id}`}
+                            className="bg-[#045C99] text-white px-4 py-2 rounded hover:bg-blue-700 transition inline-block"
+                        >
+                            Edit
+                        </Link>
+                    </div>
+                )}
             </div>
         </div>
     );
