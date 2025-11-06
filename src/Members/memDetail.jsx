@@ -66,10 +66,13 @@ export default function MemberDetails() {
                     {/* Navigation link */}
                     <div className="absolute top-4 left-4">
 
-                        {path === "home" ? <button onClick={() => navigate('/')} className="bg-[rgba(255,255,255,0.3)] p-1 font-bold hover:text-blue-700 rounded-md">
+                        {path === "home" && <button onClick={() => navigate('/')} className="bg-[rgba(255,255,255,0.3)] p-1 font-bold hover:text-blue-700 rounded-md">
                             &larr; Back to Page
-                        </button> :
-                            <button onClick={() => navigate(`/membersPage`)} className="bg-[rgba(255,255,255,0.3)] p-1 font-bold hover:text-blue-700 rounded-md">&larr; Back to Page</button>}
+                        </button>}
+                        {path === "members" && <button onClick={() => navigate(`/members/excom`)} className="bg-[rgba(255,255,255,0.3)] p-1 font-bold hover:text-blue-700 rounded-md">&larr; Back to Page</button>}
+                        {path === "dashboard" && <button onClick={() => navigate(`/dashboard`)} className="bg-[rgba(255,255,255,0.3)] p-1 font-bold hover:text-blue-700 rounded-md">&larr; Back to Page</button>}
+                        {path === "volunteer" && <button onClick={() => navigate(`/members/volunteers`)} className="bg-[rgba(255,255,255,0.3)] p-1 font-bold hover:text-blue-700 rounded-md">&larr; Back to Page</button>}
+                        {path === 'committee' && <button onClick={() => navigate(`/members/committee`)} className="bg-[rgba(255,255,255,0.3)] p-1 font-bold hover:text-blue-700 rounded-md">&larr; Back to Page</button>}
 
 
                     </div>
@@ -118,14 +121,14 @@ export default function MemberDetails() {
                                 <p className="text-gray-800">{userProfile?.university}</p>
                             </div>
 
-                            {userProfile?.userfacebook ? <div>
-                                <h2 className="text-sm font-medium text-gray-500">Facebook</h2>
-                                <p className="text-gray-800">{userProfile?.userfacebook}</p>
+                            {userProfile?.userfacebook ? <div className="">
+                                <h2 className="text-sm font-medium text-gray-500 w">Facebook</h2>
+                                <p className="text-gray-800 text-wrap max-w-[200px] overflow-hidden min-h-20">{userProfile?.userfacebook}</p>
                             </div> : null}
 
                             {userProfile?.userlinkedin ? <div>
                                 <h2 className="text-sm font-medium text-gray-500">Linkedin</h2>
-                                <p className="text-gray-800">{userProfile?.userlinkedin}</p>
+                                <p className="text-gray-800 text-wrap max-w-[200px] overflow-hidden min-h-20">{userProfile?.userlinkedin}</p>
                             </div> : null}
 
                             <div>
@@ -138,7 +141,7 @@ export default function MemberDetails() {
                         <div>
                             <h2 className="text-lg font-semibold text-gray-800 mb-4">Experience</h2>
                             <div className="space-y-3 max-h-38 overflow-y-auto scrollbar-none">
-                                {userProfile?.experiences?.length > 0 ? userProfile?.experiences?.map((exp) => (
+                                {userProfile?.experiences?.length > 0 ? new Array(...new Set(userProfile.experiences)).map((exp) => (
                                     <div key={exp._id} className="border-l-2 border-blue-500 pl-4">
                                         <h3 className="font-medium text-gray-800">{exp.title}</h3>
                                         <p className="text-sm text-gray-600 mt-1">{exp.description}</p>
@@ -172,7 +175,9 @@ export default function MemberDetails() {
     </div> : <div className="min-h-screen flex justify-center items-center ">
         <div className="space-y-5">
             <div>No data found</div>
-            {path === 'home' ? <Link to={'/'} className="w-lg p-2 rounded bg-blue-500 text-white">Back to Home</Link> : <Link to={'/membersPage'} className="w-lg p-2 rounded bg-blue-500 text-white">Back to Page</Link>}
+            {path === 'home' && <Link to={'/'} className="w-lg p-2 rounded bg-blue-500 text-white">Back to Home</Link>}
+            {path === 'membersPage' && <Link to={'/membersPage'} className="w-lg p-2 rounded bg-blue-500 text-white">Back to Page</Link>}
+            {path === 'dashboard' && <Link to={'/dashboard'} className="w-lg p-2 rounded bg-blue-500 text-white">Back to Page</Link>}
         </div>
     </div>
 

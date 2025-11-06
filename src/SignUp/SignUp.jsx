@@ -8,6 +8,7 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const [otpInputOpen, setOtpInputOpen] = useState(false);
 
 
   const [formData, setFormData] = useState({
@@ -18,7 +19,8 @@ const SignUp = () => {
     linkedin:'',
     IEEEID: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    code: ''
   });
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -68,7 +70,49 @@ const SignUp = () => {
     }
   }
 
+  const handleVerification = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch(`${BASE_URL}/auth/verify`, {
+        method: 'POST',
+        credentials:'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email:formData.email})
+      })
 
+      const data = await response.json();
+      if (!data.success) {
+        toast.error(data.message, { toastId: "register-error-message" })
+        setLoading(false);
+        return
+      }
+      toast.success('Verification code sent', { toastId: "register-success" })
+      setOtpInputOpen(true);
+      setLoading(false);
+    } catch (error) {
+      toast.error(error.message, { toastId: "register-error-500" });
+      setLoading(false);
+    }
+  }
+
+
+
+  if(otpInputOpen){
+    return (
+      <>
+      <div className='pt-5 px-2'>
+        <Link to={'/'} className="bg-blue-600 text-white p-3 rounded">
+                            &larr; Go to Home
+                        </Link>
+      </div>
+      <input type="text" name='code' onChange={(e)=>{setFormData({...formData,code:e.target.value})}} className="w-full p-3 border rounded" placeholder="Enter the verification code" />
+      <button onClick={handleSubmit} className="bg-blue-600 text-white p-3 rounded mt-3">Submit</button>
+      </>
+    )
+  }
 
   
   
@@ -95,7 +139,7 @@ const SignUp = () => {
         <div className="bg-white p-6 text-center  rounded-lg shadow-lg overflow-hidden">
 
           <div className="bg-white p-6 rounded-lg">
-            <form onSubmit={handleSubmit} className="space-y-1">
+            <form onSubmit={handleVerification} className="space-y-1">
               <div className="text-left">
                 <label htmlFor="name" className="block mb-2 text-gray-700">Name</label>
                 <input

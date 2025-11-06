@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "../../constants";
 import { useUser } from "../../hooks/useUser";
 import { useNews } from "../../hooks/useNews";
+import {FacebookIcon, FacebookShareButton,LinkedinIcon,LinkedinShareButton,WhatsappIcon,WhatsappShareButton} from 'react-share'
 
 const SingleNews = () => {
     
@@ -90,7 +91,7 @@ const SingleNews = () => {
                                 <h3 className="font-semibold text-gray-800">
                                     {singleNewsData?.author}
                                 </h3>
-                                <p className="text-sm text-gray-500">IEEE LU Student Branch</p>
+                                <p className="text-sm text-gray-500">IEEE CS LU SB Chapter</p>
                             </div>
                             {/* <button
                                 onClick={() => setIsBookmarked(!isBookmarked)}
@@ -148,12 +149,17 @@ const SingleNews = () => {
 
                         {/* Social Sharing */}
                         <div className="mt-10 pt-6 border-t border-gray-200">
-                            <div className="flex justify-between items-center">
-                                <div className="flex gap-2">
+                            <div>Share on</div>
+                            <div className="flex justify-start gap-2 items-center">
+                                {/* <div className="flex gap-2">
                                     {singleNewsData?.tags.map((tag, i) => (
                                         <span key={i} className="text-sm text-gray-500">#{tag}</span>
                                     ))}
-                                </div>
+                                </div> */}
+                                <WhatsappShareButton className="flex gap-2 bg-gray-100  hover:bg-gray-200 transition-colors p-2 rounded-full overflow-hidden" url={window.location.href} ><WhatsappIcon size={32} /></WhatsappShareButton>
+                                <FacebookShareButton className="flex gap-2 bg-gray-100  hover:bg-gray-200 transition-colors p-2 rounded-full overflow-hidden" url={window.location.href} ><FacebookIcon size={32} /></FacebookShareButton>
+                                <LinkedinShareButton className="flex gap-2 bg-gray-100  hover:bg-gray-200 transition-colors p-2 rounded-full overflow-hidden" url={window.location.href} ><LinkedinIcon size={32} /></LinkedinShareButton>
+
                                 {/* <div className="flex gap-3">
                                     <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
@@ -237,20 +243,24 @@ const SingleNews = () => {
 
                         {/* Newsletter Signup */}
                         <div className="bg-gradient-to-br bg-[#045C99] rounded-xl shadow-md p-6 text-white">
-                            <h3 className="text-xl font-bold mb-3">Subscribe to Our Newsletter</h3>
-                            <p className="text-blue-100 mb-4">Stay updated with the latest news and events from IEEE LU Student Branch</p>
-                            <form className="space-y-3">
-                                <input
-                                    type="email"
-                                    placeholder="Your email address"
-                                    className="w-full px-4 py-2 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                                />
-                                <button
-                                    type="submit"
-                                    className="w-full bg-white text-blue-600 font-medium py-2 rounded-md hover:bg-blue-50 transition-colors"
+                            <h3 className="text-xl font-bold mb-3">View Event Video</h3>
+                            <p className="text-blue-100 mb-4">Stay updated with the latest news and events from IEEE CS LU SB Chapter</p>
+                            <form className="space-y-3 space-x-2">
+                                
+                                <a
+                                    href={singleNewsData?.vidlink}
+                                    target="_blank"
+                                    className="w-full bg-white text-blue-600 font-medium p-2 rounded-md hover:bg-blue-50 transition-colors"
                                 >
-                                    Subscribe
-                                </button>
+                                    Event Video
+                                </a>
+                                <a
+                                    href={singleNewsData?.photolink}
+                                    target="_blank"
+                                    className="w-full bg-white text-blue-600 font-medium p-2 rounded-md hover:bg-blue-50 transition-colors"
+                                >
+                                    Event Photo
+                                </a>
                             </form>
                         </div>
                     </aside>

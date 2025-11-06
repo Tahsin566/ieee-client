@@ -188,8 +188,8 @@ const UpdateResearch = () => {
                         <label className="block text-gray-700 font-medium py-2">Keywords/Tags</label>
                         <input type="text" placeholder="Enter keywords" value={research.keywords} className="w-full p-2 mb-2 border rounded" onChange={(e) => setResearch({ ...research, keywords: e.target.value })} />
 
-                        <label className="block text-gray-700 font-medium py-2">Research Methodology</label>
-                        <input type="text" placeholder="Enter methodology" className="w-full p-2 mb-2 border rounded" value={research.methodology} onChange={(e) => setResearch({ ...research, methodology: e.target.value })} />
+                        {/* <label className="block text-gray-700 font-medium py-2">Research Methodology</label>
+                        <input type="text" placeholder="Enter methodology" className="w-full p-2 mb-2 border rounded" value={research.methodology} onChange={(e) => setResearch({ ...research, methodology: e.target.value })} /> */}
 
                         <label className="block text-gray-700 font-medium py-2">Research Status</label>
                         <select className="w-full p-2 mb-2 border rounded" value={research.status} onChange={(e) => setResearch({ ...research, status: e.target.value })}>

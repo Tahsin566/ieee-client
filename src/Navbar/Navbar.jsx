@@ -529,7 +529,7 @@ const Navbar = () => {
 
                         {user ? <li>
                             <Link
-                                to={"/user"}
+                                to={`/user?id=${encodeURIComponent(user?.IEEEID)}`}
                                 className="block bg-white text-black text-xl px-4 py-1.5 rounded-full h-12 w-12 hover:bg-[#045C99] hover:border-none border flex justify-center items-center"
                             >
                                 <FaUser />

@@ -32,7 +32,10 @@ const ExExCom = () => {
             getallExcom()
         }, [])
 
-    const MemberCard = ({ name, designation, info, hosted_image, facebook, linkedin }) => (
+    const MemberCard = ({ name, designation,IEEEID, info, hosted_image, facebook, linkedin }) => (
+
+        <a href={`/details?id=${IEEEID}&name=${name}`}>
+
         <div className="p-6 text-center flex-grow">
             <div className="shadow-md p-4 mx-auto w-fit px-5">
                 <img src={hosted_image || ''} alt={name} className="w-[200px] h-[200px] mx-auto mb-3 object-cover" loading="lazy" />
@@ -45,6 +48,7 @@ const ExExCom = () => {
                 </div>
             </div>
         </div>
+        </a>
     );
 
     return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
-import { FaHome, FaNewspaper, FaBook, FaCalendarAlt, FaBlog, FaImages, FaUsers, FaSignOutAlt, FaBars, FaTimes, FaMapMarkerAlt, FaEnvelope, FaIdCard, FaAddressBook, FaComment, FaUserTie, FaFacebook, FaLinkedin, FaTrophy, FaChartBar, FaUserFriends, FaAward, FaIndustry, FaProjectDiagram, FaTools, FaCalendar } from 'react-icons/fa';
+import { Link, Navigate, useSearchParams } from 'react-router-dom';
+import { FaHome, FaNewspaper, FaBook, FaCalendarAlt, FaBlog, FaImages, FaUsers, FaSignOutAlt, FaBars, FaTimes, FaMapMarkerAlt, FaEnvelope, FaIdCard, FaAddressBook, FaComment, FaUserTie, FaFacebook, FaLinkedin, FaTrophy, FaChartBar, FaUserFriends, FaAward, FaIndustry, FaProjectDiagram, FaTools, FaCalendar, FaTrashAlt, FaUserCircle } from 'react-icons/fa';
 import { MdLogout } from "react-icons/md";
 import { IoExit } from "react-icons/io5";
 import { BASE_URL } from '../../constants';
@@ -14,6 +14,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import { AiFillPicture, AiOutlinePicture } from "react-icons/ai";
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { useGallery } from '../../hooks/useGallery';
+import { List } from 'react-window'
+import { Edit } from 'lucide-react';
 
 const MarkdownConfig = {}
 
@@ -58,7 +60,9 @@ const Dashboard = () => {
 
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [activeSection, setActiveSection] = useState('home');
-    const [unapprovedPapers, setUnapprovedPapers] = useState(0);
+    const [committee, setCommittee] = useState([]);
+    const [searchParams,setSeachParams] = useSearchParams();
+    const [data,setData] = useState();
 
 
     const [committeeformData, setCommitteeFormData] = useState({
@@ -81,6 +85,30 @@ const Dashboard = () => {
         image: ''
 
     })
+
+    const getAbout = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/ieee`, {
+                })
+                const data = await response.json()
+                if(!response.ok){
+                    return
+                }
+                setIEEEabout({
+                    ActiveMember:data.ieee[0].ActiveMember,
+                    NumberofEvents:data.ieee[0].NumberofEvents,
+                    numofProjectCompleted:data.ieee[0].numofProjectCompleted,
+                    awardsWon:data.ieee[0].awardsWon,
+                    numofIndustryCollaboration:data.ieee[0].numofIndustryCollaboration,
+                    numofWorkshop:data.ieee[0].numofWorkshop,
+                    image:data.ieee[0].image
+
+                })
+                
+            } catch (error) {
+                console.log(error)
+            }
+        }
 
 
     // Mock users data
@@ -292,6 +320,23 @@ const Dashboard = () => {
         setSidebarOpen(!isSidebarOpen);
     };
 
+    const getCommittee = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/committee/all`, {
+                method: 'GET',
+                credentials: 'include'
+            })
+            const data = await response.json();
+            if (!data.success) {
+                return
+            }
+            setCommittee(data.allmembers || [])
+        } catch (error) {
+            console.log(error)
+            setCommittee([])
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -347,7 +392,7 @@ const Dashboard = () => {
                 toast.error(data?.message)
                 return
             }
-            toast.success('Added successfully')
+            toast.success('Successful')
             setTimeout(() => {
                 navigate('/dashboard')
             }, 500);
@@ -357,10 +402,28 @@ const Dashboard = () => {
         }
     }
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`${BASE_URL}/committee/${id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            })
+            const data = await response.json();
+            if (!data.success) {
+                return
+            }
+            setCommittee(committee.filter((member) => member._id !== id))
+            toast.success('Deleted successfully')
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
 
         Promise.allSettled([
+            getAbout(),
+            getCommittee(),
             getUser(),
             getAllResearches(),
             getAllUser(),
@@ -384,7 +447,7 @@ const Dashboard = () => {
 
 
     return (
-        user?.role === "admin" || true ? <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
             <ToastContainer />
             <div className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-[#045C99] text-white transition-all duration-300 ease-in-out flex flex-col h-screen`}>
@@ -402,7 +465,10 @@ const Dashboard = () => {
                     <ul className="space-y-1.5">
                         <li>
                             <button
-                                onClick={() => setActiveSection('home')}
+                                onClick={() => {
+                                    setActiveSection('home');
+                                    setSeachParams({path:'home'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'home' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaHome className="text-xl" />
@@ -411,7 +477,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('research')}
+                                onClick={() => {
+                                    setActiveSection('research');
+                                    setSeachParams({path:'research'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'research' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaBook className="text-xl" />
@@ -420,7 +489,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('magazine')}
+                                onClick={() => {
+                                    setActiveSection('magazine');
+                                    setSeachParams({path:'magazine'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'magazine' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaNewspaper className="text-xl" />
@@ -429,7 +501,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('event')}
+                                onClick={() => {
+                                    setActiveSection('event');
+                                    setSeachParams({path:'event'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'event' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaCalendarAlt className="text-xl" />
@@ -438,7 +513,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('banner')}
+                                onClick={() => {
+                                    setActiveSection('banner');
+                                    setSeachParams({path:'banner'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'event' ? 'bg-blue-700' : ''}`}
                             >
                                 <AiFillPicture className="text-xl" />
@@ -447,7 +525,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('blog')}
+                                onClick={() => {
+                                    setActiveSection('blog');
+                                    setSeachParams({path:'blog'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'blog' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaBlog className="text-xl" />
@@ -456,7 +537,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('news')}
+                                onClick={() => {
+                                    setActiveSection('news');
+                                    setSeachParams({path: 'news'});
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'news' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaNewspaper className="text-xl" />
@@ -465,7 +549,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('gallery')}
+                                onClick={() => {
+                                    setActiveSection('gallery');
+                                    setSeachParams({path:'gallery'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'gallery' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaImages className="text-xl" />
@@ -474,7 +561,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('users')}
+                                onClick={() => {
+                                    setActiveSection('users');
+                                    setSeachParams({path:'users'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'users' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaUsers className="text-xl" />
@@ -483,7 +573,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('contacts')}
+                                onClick={() => {
+                                    setActiveSection('contacts');
+                                    setSeachParams({path:'contacts'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'contacts' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaAddressBook className="text-xl" />
@@ -492,7 +585,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('committee')}
+                                onClick={() => {
+                                    setActiveSection('committee');
+                                    setSeachParams({path:'committee'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'committee' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaUserTie className="text-xl" />
@@ -501,7 +597,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('achievements')}
+                                onClick={() => {
+                                    setActiveSection('achievements');
+                                    setSeachParams({path:'achievements'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'achievements' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaTrophy className="text-xl" />
@@ -510,7 +609,10 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('statistics')}
+                                onClick={() => {
+                                    setActiveSection('statistics');
+                                    setSeachParams({path:'statistics'})
+                                }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'statistics' ? 'bg-blue-700' : ''}`}
                             >
                                 <FaChartBar className="text-xl" />
@@ -970,7 +1072,9 @@ const Dashboard = () => {
                                 <Link to="/addGallery" className="bg-[#045C99] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                                     Upload Images
                                 </Link>
-                            </div>                            {/* Gallery Items */}
+                            </div>
+                            
+                            {/* Gallery Items */}
                             {gallery.length > 0 ? <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {/* Gallery Image 1 */}
 
@@ -1044,7 +1148,7 @@ const Dashboard = () => {
 
 
                                                 <Link
-                                                    to={`/addExperience?id=${user?.IEEEID}`}
+                                                    to={`/addExperience?id=${user?.IEEEID}&name=${user?.username}&fblink=${user?.userfacebook}&linkedin=${user?.userlinkedin}`}
                                                     className="bg-blue-50 text-[#045C99] px-4 py-2 rounded border border-blue-200 hover:bg-blue-100 transition text-center w-50 flex items-center justify-center"
                                                 >
                                                     Add New Experience
@@ -1109,166 +1213,42 @@ const Dashboard = () => {
                     {activeSection === 'committee' && (
                         <div className="bg-white rounded-lg shadow-md p-6">
                             <h1 className="text-2xl font-semibold text-gray-800">Committee Management</h1>
-                            <p className="text-gray-600 mt-1 mb-6">Add or update IEEE CS LU SB Chapter committee members information</p>
+                            <p className="text-gray-600 mt-1 mb-6">Manage IEEE CS LU SB Chapter committee members information</p>
 
-                            <form className="space-y-6" onSubmit={handleSubmit}>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Name Input */}
-                                    <div>
-                                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Full Name*
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            name="name"
-                                            value={committeeformData.name}
-                                            className="block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
-                                            placeholder="Enter committee member's full name"
-                                            onChange={(e) => setCommitteeFormData({ ...committeeformData, name: e.target.value })}
-                                            required
-                                        />
-                                    </div>
+                            
+                            <div>
+                                {committee.map((member) => (
+                                    <div key={member._id} className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex justify-between items-center hover:shadow-md transition-shadow">
 
-                                    {/* Designation Input */}
-                                    <div>
-                                        <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Designation*
-                                        </label>
-                                        <select
-                                            id="category"
-                                            name="category"
-                                            value={committeeformData.designation}
-                                            onChange={(e) => setCommitteeFormData({ ...committeeformData, designation: e.target.value })}
-                                            className=" block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
-                                            required
-                                        >
-                                            <option value="">Select Member category</option>
-                                            {memberType?.map((category, index) => (
-                                                <option key={index} value={category}>{category}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    {/* IEEE ID Input */}
-                                    <div>
-                                        <label htmlFor="ieeeId" className="block text-sm font-medium text-gray-700 mb-1">
-                                            IEEE ID*
-                                        </label>
-                                        <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <FaIdCard className="h-4 w-4 text-gray-400" />
+                                        <a href={`/details?id=${member.IEEEID}&name=${member.name}&path=dashboard`}>
+                                        <div className="flex items-center flex-wrap">
+                                            <div className="mr-4">
+                                                {member.hosted_image ? <img
+                                                    src={member.hosted_image}
+                                                    alt={member.name}
+                                                    loading='lazy'
+                                                    className="w-12 h-12 rounded-full object-cover"
+                                                />: <FaUserCircle className="h-12 w-12 text-gray-400" />}
                                             </div>
-                                            <input
-                                                type="text"
-                                                id="ieeeId"
-                                                name="ieeeId"
-                                                value={committeeformData.id}
-                                                onChange={(e) => setCommitteeFormData({ ...committeeformData, id: e.target.value || '' })}
-                                                className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
-                                                placeholder="Enter 8-digit IEEE ID"
-                                                title="IEEE ID should be an 8-digit number"
-                                            />
+                                            <div>
+                                                <h3 className="font-medium text-lg text-gray-800">{member.name}</h3>
+                                                <p>{member.CommitteeMemType}</p>
+                                                <p className="text-gray-600 mt-1">{member.designation}</p>
+                                            </div>
+                                        </div>
+                                            </a>
+                                        <div className="flex items-center space-x-4">
+                                            <Link to={`/updateCommittee?id=${member._id}&name=${member.name}&path=committee`}><Edit size={18} /></Link>
+                                            <button
+                                                onClick={() => handleDelete(member?._id)}
+                                                className="text-red-600 hover:text-red-800"
+                                            >
+                                                <FaTrashAlt />
+                                            </button>
                                         </div>
                                     </div>
-
-                                    {/* Committee Type Select */}
-                                    <div>
-                                        <label htmlFor="committeeType" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Committee Type*
-                                        </label>
-                                        <select
-                                            id="committeeType"
-                                            name="committeeType"
-                                            onChange={(e) => setCommitteeFormData({ ...committeeformData, type: e.target.value })}
-                                            className="block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
-                                            required
-                                        >
-                                            <option value="">Select committee type</option>
-                                            <option value="ExCom">ExCom</option>
-                                            <option value="Ex ExCom">Ex ExCom</option>
-                                            <option value="Advisory Panel">Advisory Panel</option>
-                                            <option value="Volunteer">Volunteer</option>
-                                            <option value="Member">Member</option>
-                                        </select>
-                                    </div>
-
-                                    {/* Facebook Link Input */}
-                                    <div>
-                                        <label htmlFor="facebookLink" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Facebook Profile
-                                        </label>
-                                        <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <FaFacebook className="h-4 w-4 text-blue-600" />
-                                            </div>
-                                            <input
-                                                type="url"
-                                                id="facebookLink"
-                                                onChange={(e) => setCommitteeFormData({ ...committeeformData, facebookLink: e.target.value })}
-                                                name="facebookLink"
-                                                className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
-                                                placeholder="https://facebook.com/username"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* LinkedIn Link Input */}
-                                    <div>
-                                        <label htmlFor="linkedinLink" className="block text-sm font-medium text-gray-700 mb-1">
-                                            LinkedIn Profile
-                                        </label>
-                                        <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <FaLinkedin className="h-4 w-4 text-blue-800" />
-                                            </div>
-                                            <input
-                                                type="url"
-                                                id="linkedinLink"
-                                                name="linkedinLink"
-                                                onChange={(e) => setCommitteeFormData({ ...committeeformData, linkedinLink: e.target.value })}
-                                                className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
-                                                placeholder="https://linkedin.com/in/username"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Image Upload */}
-                                <div>
-                                    <label htmlFor="profileImage" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Profile Image*
-                                    </label>
-                                    <div className="mt-1 flex items-center">
-                                        <span className="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100 mr-4">
-                                            <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                            </svg>
-                                        </span>
-                                        <input
-                                            type="file"
-                                            id="profileImage"
-                                            name="profileImage"
-                                            onChange={(e) => setCommitteeFormData({ ...committeeformData, image: e.target.files[0] })}
-                                            accept="image/*"
-                                            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                        />
-                                    </div>
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        Recommended: Square image, at least 300x300 pixels
-                                    </p>
-                                </div>
-
-                                {/* Submit Button */}
-                                <div className="pt-4">
-                                    <button
-                                        type="submit"
-                                        className="w-full md:w-auto bg-[#045C99] text-white py-2 px-6 rounded-md font-medium hover:bg-blue-700 transition duration-300 flex justify-center items-center"
-                                    >
-                                        Add Committee Member
-                                    </button>
-                                </div>
-                            </form>
+                                ))}
+                            </div>
                         </div>
                     )}
 
@@ -1339,6 +1319,7 @@ const Dashboard = () => {
                                                 id="ActiveMember"
                                                 name="ActiveMember"
                                                 min="0"
+                                                value={IEEEabout.ActiveMember}
                                                 className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
                                                 placeholder="Enter count"
                                                 onChange={(e) => setIEEEabout({ ...IEEEabout, ActiveMember: e.target.value })}
@@ -1360,6 +1341,7 @@ const Dashboard = () => {
                                                 id="technicalWorkshops"
                                                 name="technicalWorkshops"
                                                 min="0"
+                                                value={IEEEabout.numofWorkshop}
                                                 className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
                                                 placeholder="Enter count"
                                                 onChange={(e) => setIEEEabout({ ...IEEEabout, numofWorkshop: e.target.value })}
@@ -1382,6 +1364,7 @@ const Dashboard = () => {
                                                 id="industryPartners"
                                                 name="industryPartners"
                                                 min="0"
+                                                value={IEEEabout.numofIndustryCollaboration}
                                                 className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
                                                 placeholder="Enter count"
                                                 onChange={(e) => setIEEEabout({ ...IEEEabout, numofIndustryCollaboration: e.target.value })}
@@ -1403,6 +1386,7 @@ const Dashboard = () => {
                                                 type="number"
                                                 id="awardsWon"
                                                 name="awardsWon"
+                                                value={IEEEabout.awardsWon}
                                                 min="0"
                                                 className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
                                                 placeholder="Enter count"
@@ -1426,6 +1410,7 @@ const Dashboard = () => {
                                                 id="eventsOrganized"
                                                 name="eventsOrganized"
                                                 min="0"
+                                                value={IEEEabout.NumberofEvents}
                                                 className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
                                                 placeholder="Enter count"
                                                 onChange={(e) => setIEEEabout({ ...IEEEabout, NumberofEvents: e.target.value })}
@@ -1448,6 +1433,7 @@ const Dashboard = () => {
                                                 id="projectsCompleted"
                                                 name="projectsCompleted"
                                                 min="0"
+                                                value={IEEEabout.numofProjectCompleted}
                                                 className="pl-10 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md py-2 px-3"
                                                 placeholder="Enter count"
                                                 onChange={(e) => setIEEEabout({ ...IEEEabout, numofProjectCompleted: e.target.value })}
@@ -1485,12 +1471,7 @@ const Dashboard = () => {
 
                 </main>
             </div>
-        </div> :
-            (user?.role === "user") ? <div className='flex flex-col justify-center items-center min-h-screen'>
-                <div>You are not authorized</div>
-                <br></br>
-                <Link className='p-2 bg-blue-500 text-white rounded' to={'/'}>Go to home</Link>
-            </div> : null
+        </div>
     );
 };
 

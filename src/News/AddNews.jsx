@@ -20,7 +20,9 @@ const AddNews = () => {
         markdown:"",
         publicationDate:"",
         newsImage:"",
-        category:""
+        category:"",
+        vidlink:"",
+        photolink:""
     })
 
     const handleSubmit = async (e) => {
@@ -39,6 +41,8 @@ const AddNews = () => {
         formData.append("newsImage",news.newsImage);
         formData.append("tags",tags);
         formData.append("category",news.category?.trim());
+        formData.append("vidlink",news.vidlink);
+        formData.append("photolink",news.photolink);
 
         try {
             const response = await fetch(`${BASE_URL}/news`, {
@@ -263,6 +267,34 @@ const AddNews = () => {
                                     />
                                 </div>
                             )}
+                        </div>
+
+                        <div>
+                            <label htmlFor="video" className="block text-gray-700 font-medium mb-2">Video Link</label>
+                            <input
+                                type="url"
+                                id="title"
+                                name="title"
+                                placeholder="Enter video link"
+                                className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                                value={news.vidlink}
+                                onChange={(e) => setNews({ ...news, vidlink: e.target.value })}
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="pic" className="block text-gray-700 font-medium mb-2">Photo Link</label>
+                            <input
+                                type="url"
+                                id="title"
+                                name="title"
+                                placeholder="Enter photo link"
+                                className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                                value={news.photolink}
+                                onChange={(e) => setNews({ ...news, photolink: e.target.value })}
+                            />
                         </div>
 
                         {/* Submit Button */}

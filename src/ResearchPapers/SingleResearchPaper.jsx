@@ -89,10 +89,10 @@ const SingleResearchPaper = () => {
                     </div>
 
                     {/* Methodology Section */}
-                    <div className="mb-8">
+                    {/* <div className="mb-8">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2">Methodology</h3>
                         <p className="text-gray-700">{singlepaper?.methodology}</p>
-                    </div>
+                    </div> */}
 
                     {/* Author Information */}
                     <div className="mb-8 bg-gray-50 p-6 rounded-lg">

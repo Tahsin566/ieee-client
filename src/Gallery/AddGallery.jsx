@@ -5,6 +5,7 @@ import { BASE_URL } from '../../constants';
 import { useUser } from '../../hooks/useUser';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import heic2any from "heic2any";
 
 const AddGallery = () => {
 
@@ -19,49 +20,123 @@ const AddGallery = () => {
     const [imageFiles, setImageFiles] = useState([])
 
 
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
+    // const handleImageChange = (e) => {
+    //     const files = Array.from(e.target.files);
         
-        // Validate number of images
-        if (files.length > 20) {
-            toast.error("You can only upload up to 20 images at once");
-            return;
-        }
+    //     // Validate number of images
+    //     if (files.length > 20) {
+    //         toast.error("You can only upload up to 20 images at once");
+    //         return;
+    //     }
 
-        if (imageFiles.length + files.length > 20) {
-            toast.error(`You can only upload ${20 - imageFiles.length} more image(s)`);
-            return;
-        }
+    //     if (imageFiles.length + files.length > 20) {
+    //         toast.error(`You can only upload ${20 - imageFiles.length} more image(s)`);
+    //         return;
+    //     }
 
-        // Validate file sizes
-        const invalidFiles = files.filter(file => file.size > 5 * 1024 * 1024);
-        if (invalidFiles.length > 0) {
-            toast.error("Some images exceed 5MB. Please choose smaller files.");
-            return;
-        }
+    //     // Validate file sizes
+    //     const invalidFiles = files.filter(file => file.size > 5 * 1024 * 1024);
+    //     if (invalidFiles.length > 0) {
+    //         toast.error("Some images exceed 5MB. Please choose smaller files.");
+    //         return;
+    //     }
 
-        // Create previews
-        const newPreviews = [];
-        const newFiles = [];
+    //     // Create previews
+    //     const newPreviews = [];
+    //     const newFiles = [];
 
-        files.forEach(file => {
-            newFiles.push(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                newPreviews.push({
-                    file: file,
-                    preview: reader.result,
-                    name: file.name
-                });
+    //     files.forEach(file => {
+
+    //         newFiles.push(file);
+    //         const reader = new FileReader();
+    //         reader.onloadend = () => {
+    //             newPreviews.push({
+    //                 file: file,
+    //                 preview: reader.result,
+    //                 name: file.name
+    //             });
                 
-                if (newPreviews.length === files.length) {
-                    setImagePreviews(prev => [...prev, ...newPreviews]);
-                    setImageFiles(prev => [...prev, ...newFiles]);
+    //             if (newPreviews.length === files.length) {
+    //                 setImagePreviews(prev => [...prev, ...newPreviews]);
+    //                 setImageFiles(prev => [...prev, ...newFiles]);
+    //             }
+    //         };
+    //         reader.readAsDataURL(file);
+    //     });
+    // };
+
+
+const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files);
+
+    // Validate number of images initially before processing
+    if (files.length > 20) {
+        toast.error("You can only upload up to 20 images at once");
+        return;
+    }
+    if (imageFiles.length + files.length > 20) {
+        toast.error(`You can only upload ${20 - imageFiles.length} more image(s)`);
+        return;
+    }
+
+    // Convert HEIC/HEIF files to JPEG
+    const convertedFiles = await Promise.all(
+        files.map(async (file) => {
+            if (
+                file.type === 'image/heic' ||
+                file.type === 'image/heif' ||
+                file.name.match(/\.heic$/i) ||
+                file.name.match(/\.heif$/i)
+            ) {
+                try {
+                    const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg" });
+                    return new File(
+                        [convertedBlob],
+                        file.name.replace(/\.(heic|heif)$/i, ".jpg"),
+                        { type: "image/jpeg" }
+                    );
+                } catch (err) {
+                    toast.error(`Failed to convert ${file.name} from HEIC/HEIF`);
+                    return null; // Skip this file
                 }
-            };
-            reader.readAsDataURL(file);
-        });
-    };
+            }
+            return file;
+        })
+    );
+
+    // Filter out any null conversion failures
+    const validFiles = convertedFiles.filter((f) => f !== null);
+
+    // Validate file sizes (JPEG converted files might be larger)
+    const invalidFiles = validFiles.filter(file => file.size > 5 * 1024 * 1024);
+    if (invalidFiles.length > 0) {
+        toast.error("Some images exceed 5MB. Please choose smaller files.");
+        return;
+    }
+
+    // Create previews
+    const newPreviews = [];
+    const newFiles = [];
+
+    validFiles.forEach((file) => {
+        newFiles.push(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            newPreviews.push({
+                file,
+                preview: reader.result,
+                name: file.name
+            });
+
+            if (newPreviews.length === validFiles.length) {
+                setImagePreviews(prev => [...prev, ...newPreviews]);
+                setImageFiles(prev => [...prev, ...newFiles]);
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+};
+
 
     const removeImage = (index) => {
         setImagePreviews(prev => prev.filter((_, i) => i !== index));

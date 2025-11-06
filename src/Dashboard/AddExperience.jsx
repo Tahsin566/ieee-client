@@ -35,9 +35,14 @@ const AddExperience = () => {
         // Get IEEE ID from URL query parameters if available
         const queryParams = new URLSearchParams(location.search);
         const idFromUrl = queryParams.get('id');
-        if (idFromUrl) {
-            setIeeeId(idFromUrl);
-        }
+        const nameFromUrl = queryParams.get('name');
+        const fblink = queryParams.get('fblink');
+        const lnkdn = queryParams.get('linkedin');
+
+        setIeeeId(idFromUrl || '');
+        setName(nameFromUrl || '');
+        setFacebook(fblink || '');
+        setLinkedin(lnkdn || '');
     }, [location]);
 
     const handleSubmit = async(e) => {
@@ -230,8 +235,8 @@ const AddExperience = () => {
                                     id="experience"
                                     name="experience"
                                     rows={3}
-                                    value={experienceDescription}
-                                    onChange={(e) => setExperienceDescription(e.target.value)}
+                                    value={`${experienceTitle} at IEEE CS LU SB Chapter`} 
+                                    onChange={(e) => setExperienceDescription(e.target.value || `${experienceTitle} at IEEE CS LU SB Chapter`)}
                                     required
                                     className="block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border border-gray-300 rounded-md p-3"
                                     placeholder="Describe the member's experience, contributions, achievements, or participation in IEEE activities..."
@@ -243,7 +248,7 @@ const AddExperience = () => {
 
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Name*
+                                    Facebook
                                 </label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

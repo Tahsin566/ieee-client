@@ -130,10 +130,10 @@ const UserPage = () => {
                                 <p className="text-gray-800">{userProfile?.email}</p>
                             </div>
 
-                            <div>
+                            {userProfile?.role !== 'admin' && <div>
                                 <h2 className="text-sm font-medium text-gray-500">IEEE ID</h2>
                                 <p className="text-gray-800">{userProfile?.IEEEID}</p>
-                            </div>
+                            </div>}
 
 
                             <div>
@@ -146,14 +146,14 @@ const UserPage = () => {
                                 <p className="text-gray-800">{userProfile?.university}</p>
                             </div>
 
-                            {userProfile?.userfacebook ? <div>
+                            {userProfile?.userfacebook && userProfile?.role !== 'admin' ? <div>
                                 <h2 className="text-sm font-medium text-gray-500">Facebook</h2>
-                                <p className="text-gray-800">{userProfile?.userfacebook}</p>
+                                <p className="text-gray-800 text-wrap max-w-[200px] overflow-hidden min-h-20">{userProfile?.userfacebook}</p>
                             </div>:null}
 
-                            {userProfile?.userlinkedin ? <div>
+                            {userProfile?.userlinkedin && userProfile?.role !== 'admin' ? <div>
                                 <h2 className="text-sm font-medium text-gray-500">Linkedin</h2>
-                                <p className="text-gray-800">{userProfile?.userlinkedin}</p>
+                                <p className="text-gray-800 text-wrap max-w-[200px] overflow-hidden min-h-20">{userProfile?.userlinkedin}</p>
                             </div>:null}
 
                             <div>
@@ -163,7 +163,7 @@ const UserPage = () => {
                         </div>
 
                         {/* Experience Section */}
-                        <div>
+                        {userProfile?.role !== 'admin' && <div>
                             <h2 className="text-lg font-semibold text-gray-800 mb-4">Experience</h2>
                             <div className="space-y-3 max-h-38 overflow-y-auto scrollbar-none">
                                 {userProfile?.experiences?.length > 0 ? userProfile?.experiences?.map((exp) => (
@@ -188,7 +188,7 @@ const UserPage = () => {
                                     </div>
                                 )) : <div>No achievements data found</div>}
                             </div>
-                        </div>
+                        </div>}
                     </div>
 
                 </div>
@@ -197,19 +197,19 @@ const UserPage = () => {
 
                     {user?.IEEEID === userProfile?.IEEEID ? <div className='flex flex-wrap '>
 
-                        <Link
+                        {userProfile?.role !== 'admin' && <Link
                             to={`/addAcheivement`}
                             className="bg-blue-50 text-[#045C99] px-4 py-2 rounded border border-blue-200 hover:bg-blue-100 transition mr-2 text-center w-50 flex items-center justify-center"
                         >
                             Add New achievement
-                        </Link>
+                        </Link>}
 
-                        <Link
+                        {userProfile?.role !== 'admin' && <Link
                             to={`/addlinks?email=${userProfile?.email}`}
                             className="bg-blue-50 text-[#045C99] px-4 py-2 rounded border border-blue-200 hover:bg-blue-100 transition mr-2 text-center w-35 flex items-center justify-center"
                         >
                             + social Links
-                        </Link>
+                        </Link>}
 
                         <Link
                             to={`/reset?email=${userProfile?.email}`}

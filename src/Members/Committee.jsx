@@ -47,7 +47,7 @@ const Committee = () => {
                     {member?.programCoordinator?.map((person, index) => (
                         <div className="p-6 text-center flex-col justify-between" key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -77,7 +77,7 @@ const Committee = () => {
 
                         <div className="p-6 text-center flex-col justify-between" key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -104,7 +104,7 @@ const Committee = () => {
                     {member?.webmaster?.map((person, index) => (
                         <div className="p-6 text-center flex-col justify-between" key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover object-[50%_10%] mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -132,7 +132,7 @@ const Committee = () => {
 
                         <div className="p-6 text-center " key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -160,7 +160,7 @@ const Committee = () => {
 
                         <div className="p-6 text-center " key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -190,7 +190,7 @@ const Committee = () => {
 
                         <div className="p-6 text-center " key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -216,7 +216,7 @@ const Committee = () => {
 
                         <div className="p-6 text-center " key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -242,7 +242,7 @@ const Committee = () => {
 
                         <div className="p-6 text-center " key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -268,7 +268,7 @@ const Committee = () => {
 
                         <div className="p-6 text-center " key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover object-[50%_25%] mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>
@@ -294,7 +294,7 @@ const Committee = () => {
 
                         <div className="p-6 text-center " key={index}>
                             <div className="shadow-md p-4 mx-auto w-fit px-10 text-black h-[350px]">
-                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}`}>
+                                <Link to={`/details?id=${person?.IEEEID}&name=${person?.name}&path=committee`}>
                                     <img src={person?.hosted_image ? person?.hosted_image : '/img/user.png'} alt={person?.name} loading="lazy" className="w-[200px] h-[200px] object-cover mx-auto mb-3" />
                                 </Link>
                                 <h3 className="text-xl font-bold">{person?.name}</h3>

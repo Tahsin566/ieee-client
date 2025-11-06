@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useGallery } from "../../hooks/useGallery";
 import { BASE_URL } from "../../constants";
+import { List } from "react-window";
 
 
 const galleryImages = [
@@ -11,7 +12,7 @@ const galleryImages = [
 
 const Gallery = () => {
 
-  const {gallery,getAllGalleryPhoto} = useGallery()
+  const { gallery, getAllGalleryPhoto } = useGallery()
 
   useEffect(() => {
     getAllGalleryPhoto()

@@ -22,7 +22,7 @@ const UpdateCommittee = () => {
     });
 
     const [currentImage, setCurrentImage] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const memberType = [
         'Chairperson',
@@ -52,13 +52,13 @@ const UpdateCommittee = () => {
     const fetchCommitteeData = async () => {
         try {
             // Fetch all excom members
-            const response = await fetch(`${BASE_URL}/committee/excom`);
+            const response = await fetch(`${BASE_URL}/committee/all`);
             const data = await response.json();
-            
-            if (data.success && data.excom) {
+
+            if (data.success) {
                 // Find the specific member by ID
-                const member = data.excom.find(m => m._id === committeeId);
-                
+                const member = data.allmembers.find(m => m._id === committeeId);
+
                 if (member) {
                     setCommitteeFormData({
                         name: member.name || '',
@@ -87,33 +87,42 @@ const UpdateCommittee = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
-        formData.append('name', committeeformData.name);
-        formData.append('designation', committeeformData.designation);
-        formData.append('facebookLink', committeeformData.facebookLink);
-        formData.append('linkedinLink', committeeformData.linkedinLink);
-        formData.append('type', committeeformData.type);
-        if (committeeformData.image) {
-            formData.append('image', committeeformData.image);
-        }
-        formData.append('id', committeeformData.id);
+        // const formData = new FormData();
+        // formData.append('name', committeeformData.name);
+        // formData.append('designation', committeeformData.designation);
+        // formData.append('facebookLink', committeeformData.facebookLink);
+        // formData.append('linkedinLink', committeeformData.linkedinLink);
+        // formData.append('type', committeeformData.type);
+        // if (committeeformData.image) {
+        //     formData.append('image', committeeformData.image);
+        // }
+        // formData.append('id', committeeformData.id);
+
+        const formData = new FormData()
+        formData.append('name', committeeformData.name)
+        formData.append('designation', committeeformData.designation)
+        formData.append('facebookLink', committeeformData.facebookLink)
+        formData.append('linkedinLink', committeeformData.linkedinLink)
+        formData.append('type', committeeformData.type)
+        formData.append('image', committeeformData.image)
+        formData.append('id', committeeformData.id)
 
         try {
-            const response = await fetch(`${BASE_URL}/committee/update-committee/${committeeId}`, {
-                method: 'PUT',
+            const response = await fetch(`${BASE_URL}/committee/add-committee`, {
+                method: 'POST',
                 credentials: 'include',
                 body: formData
             });
             const data = await response.json();
-            
+
             if (!data.success) {
                 toast.error(data.message || 'Failed to update');
                 return;
             }
-            
+
             toast.success('Updated successfully');
             setTimeout(() => {
-                navigate('/members/excom');
+                navigate('/dashboard');
             }, 1500);
         } catch (error) {
             console.log(error);
@@ -129,17 +138,7 @@ const UpdateCommittee = () => {
         );
     }
 
-    if (user?.role !== 'admin') {
-        return (
-            <div className='flex flex-col justify-center items-center min-h-screen'>
-                <div>You are not authorized</div>
-                <br />
-                <button onClick={() => navigate('/')} className='p-2 bg-blue-500 text-white rounded'>
-                    Go to home
-                </button>
-            </div>
-        );
-    }
+    
 
     return (
         <div className="min-h-screen bg-gray-100 py-8">
@@ -283,9 +282,9 @@ const UpdateCommittee = () => {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Current Profile Image
                                 </label>
-                                <img 
-                                    src={currentImage} 
-                                    alt="Current profile" 
+                                <img
+                                    src={currentImage}
+                                    alt="Current profile"
                                     className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200"
                                 />
                             </div>

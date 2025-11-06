@@ -50,7 +50,7 @@ const Volunteers = () => {
               <img src={volunteer?.hosted_image} alt="Volunteer" className="mx-auto mb-4 h-32 w-32 object-cover rounded-full object-[50%_10%]" loading="lazy" />
             </Link>
               <h3 className="font-semibold text-lg">{volunteer.name}</h3>
-              <h3 className="">Commitee : {volunteer?.duration}</h3>
+              <h3 className="">Commitee : {volunteer?.duration || (new Date(Date.now()).getFullYear() + "-"  + (new Date(Date.now()).getFullYear()+1))}</h3>
               <div className="flex justify-center mt-3 space-x-3">
                 <a href={volunteer.facebook} className="text-[#045C99] hover:text-black text-xl"><i className="fab fa-facebook"></i></a>
                 <a href={volunteer.linkedin} className="text-[#045C99] hover:text-black text-xl"><i className="fab fa-linkedin"></i></a>

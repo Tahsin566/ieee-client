@@ -38,7 +38,7 @@ export default function AddBanner() {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('name', banner.name);
+        formData.append('title', banner.name);
         formData.append('description', banner.description);
         formData.append('type', banner.type);
         formData.append('image', banner.image);

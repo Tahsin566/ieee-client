@@ -35,19 +35,19 @@ export const EventCategories = [
 
 export const researchCategories = [
     {
-        name:"Artificial Intelligence",
+        name:"Conference",
         type:"research"
     },
     {
-        name:"Machine Learning",
+        name:"Journal",
         type:"research"
     },
     {
-        name:"Deep Learning",
+        name:"Dissertations",
         type:"research"
     },
     {
-        name:"Neural Network",
+        name:"Theses",
         type:"research"
     },
 ]
