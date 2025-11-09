@@ -63,6 +63,7 @@ const Dashboard = () => {
     const [committee, setCommittee] = useState([]);
     const [searchParams,setSeachParams] = useSearchParams();
     const [data,setData] = useState();
+    const [searchTerm, setSearchTerm] = useState('');
 
 
     const [committeeformData, setCommitteeFormData] = useState({
@@ -109,7 +110,6 @@ const Dashboard = () => {
                 console.log(error)
             }
         }
-
 
     // Mock users data
     // const users = [
@@ -1111,10 +1111,15 @@ const Dashboard = () => {
                             <h1 className="text-2xl font-semibold text-gray-800">Users Management</h1>
                             <p className="text-gray-600 mt-1 mb-6">Manage IEEE CS LU SB Chapter members and users here</p>
 
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="relative">
 
-                                </div>
+                            <div className="flex justify-between items-center mb-6 w-full">
+                                
+                                    <input
+                                        type="text"
+                                        placeholder="Search users by IEEE ID"
+                                        className="bg-gray-100 border border-gray-300 rounded-md px-4 w-full py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
                                 {/* <button className="bg-[#045C99] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                                     Add New User
                                 </button> */}
@@ -1122,7 +1127,7 @@ const Dashboard = () => {
                             {/* Users Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {allUser?.map(user => (
-                                    <div key={user.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+                                    user.IEEEID?.toLowerCase()?.includes(searchTerm.toLowerCase())&& <div key={user.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
                                         <div className="p-6 flex flex-col items-center">
                                             {user?.profilePicture ? <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-blue-100">
                                                 <img
