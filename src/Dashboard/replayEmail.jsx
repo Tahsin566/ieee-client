@@ -20,6 +20,7 @@ export default function ReplayEmail() {
     })
 
     const email = searchParams.get('email')
+    const name = searchParams.get('name')
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,7 +52,7 @@ export default function ReplayEmail() {
 
     useEffect(() => {
         getUser()
-        setContact({ ...contact, email: email?.trim(), subject: 'Replying to the message' })
+        setContact({ ...contact, email: email?.trim(), subject: 'Replying to the message',name:name?.trim() })
     }, [])
 
     return user?.role === "admin" ? <div className="p-5">

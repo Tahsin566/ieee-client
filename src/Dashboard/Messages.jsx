@@ -145,7 +145,7 @@ const Messages = () => {
                         </div>
 
                         <div className="mt-8 flex">
-                            <Link to={`/replyEmail?email=${selectedMessage.email}`} className="bg-[#045C99] text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            <Link to={`/replyEmail?email=${selectedMessage.email}&name=${selectedMessage.name}`} className="bg-[#045C99] text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                                 Reply
                             </Link>
                             <button onClick={()=>handleRead(selectedMessage?._id)} className="ml-4 border border-gray-300 px-4 py-2 rounded text-gray-700 hover:bg-gray-100 transition">

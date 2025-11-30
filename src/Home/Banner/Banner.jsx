@@ -16,7 +16,7 @@ const Banner = ({ events }) => {
     return (
 
 
-        <div className="relative mt-[0.5px] h-[400px] md:h-[500px] lg:h-[620px] overflow-hidden">
+        <div className="relative mt-[0.5px] h-[400px] md:h-[500px] lg:h-[650px] overflow-hidden">
             <Swiper
                 spaceBetween={30}
                 centeredSlides={true}
@@ -37,12 +37,12 @@ const Banner = ({ events }) => {
                         <div className="absolute inset-0 z-10 flex items-center justify-center">
 
                             <img src={`${event?.image}`} alt={`IEEE Banner ${index + 1}`}
-                                className="w-full h-[70%] object-cover"
+                                className="w-full object-stretch"
                                 loading="lazy" />
                         </div>
 
 
-                        <div className="flex flex-col justify-center items-center text-center z-20 absolute bottom-10 md:bottom-24 lg:bottom-28 left-1/2 transform -translate-x-1/2 backdrop-blur-md bg-black/40 rounded-lg py-3 md:py-5 lg:py-6 px-6 md:px-12 lg:px-20 max-w-[100%] md:max-w-[85%] lg:max-w-[90%]">
+                        <div className="flex flex-col justify-center w-full items-center text-center z-20 absolute bottom-0 md:bottom-0 lg:bottom-0 left-1/2 transform -translate-x-1/2 backdrop-blur-md bg-black/40 rounded-lg py-3 md:py-5 lg:py-6 px-6 md:px-12 lg:px-20 max-w-[100%] md:max-w-[85%] lg:max-w-[100%]">
                             <h2 className="text-xl md:text-4xl lg:text-5xl font-bold font-['Roboto'] mb-2 md:mb-4 lg:mb-5">
                                 <span className="text-white">
                                     {event?.title}

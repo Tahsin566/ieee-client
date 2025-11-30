@@ -83,10 +83,15 @@ import OtpVerify from './SignIn/otpVerification.jsx'
 import ForgotPassword from './SignIn/forgotPassword.jsx'
 import { AdminRoute } from "./adminRoute/adminRoute.jsx";
 import UpdateCommittee from "./UpdateCommittee/UpdateCommittee.jsx";
+<<<<<<< HEAD
 import Seminar from "./Seminar/Seminar.jsx";
 import SingleSeminar from "./Seminar/SingleSeminar.jsx";
 import AddSeminar from "./Seminar/AddSeminar.jsx";
 import UpdateSeminar from "./Seminar/UpdateSeminar.jsx";
+=======
+import ChangePass from "./SignIn/changepass.jsx";
+import EmailInput from "./SignIn/emailInput.jsx";
+>>>>>>> 8ee569c314eb9e3a3b61025626c94d1e894798a7
 
 
 
@@ -404,6 +409,10 @@ const router = createBrowserRouter([
     element: <SignUp></SignUp>
   },
   {
+    path:'/verify-email',
+    element: <EmailInput />
+  },
+  {
     path:'/reset',
     element:
     <PrivateRoute>
@@ -423,6 +432,10 @@ const router = createBrowserRouter([
       </PrivateRoute>
   },
   {
+    path:'/change-pass',
+    element:<ChangePass />
+  },
+  {
     path:'/addlinks',
     element:<PrivateRoute>
       <Addlinks />
@@ -430,9 +443,9 @@ const router = createBrowserRouter([
   },
   {
     path:'/verify-otp',
-    element:<PrivateRoute>
-    <OtpVerify />
-    </PrivateRoute>
+    // element:<PrivateRoute>
+    element: <OtpVerify />
+    // </PrivateRoute>
   },
   {
     path:'/details',

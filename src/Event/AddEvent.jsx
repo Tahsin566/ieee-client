@@ -309,7 +309,7 @@ const AddEvent = () => {
                                 type="submit"
                                 className="w-full bg-[#045C99] text-white py-3 rounded-md font-medium hover:bg-blue-700 transition duration-300"
                             >
-                                Create Event
+                                Add Event
                             </button>
                         </div>
                     </form>
