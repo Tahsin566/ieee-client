@@ -52,6 +52,29 @@ export const researchCategories = [
     },
 ]
 
+export const SeminarCategories = [
+    {
+        name:"Technical",
+        type:"seminar"
+    },
+    {
+        name:"Workshop",
+        type:"seminar"
+    },
+    {
+        name:"Career",
+        type:"seminar"
+    },
+    {
+        name:"Research",
+        type:"seminar"
+    },
+    {
+        name:"Other",
+        type:"seminar"
+    },
+]
+
 export const categories = [
     {
         name:"Technology",

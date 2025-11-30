@@ -22,8 +22,8 @@ const ResourcesAndRecordings = () => {
             icon: <FaFile className="text-[#045C99] text-3xl" />,
             title: 'Presentation Slides',
             description: 'Download presentation materials from our events and workshops.',
-            linkText: 'Download Slides',
-            linkHref: '/',
+            linkText: 'View Seminars',
+            linkHref: '/seminar',
         },
     ];
     return (

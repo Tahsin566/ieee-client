@@ -83,6 +83,10 @@ import OtpVerify from './SignIn/otpVerification.jsx'
 import ForgotPassword from './SignIn/forgotPassword.jsx'
 import { AdminRoute } from "./adminRoute/adminRoute.jsx";
 import UpdateCommittee from "./UpdateCommittee/UpdateCommittee.jsx";
+import Seminar from "./Seminar/Seminar.jsx";
+import SingleSeminar from "./Seminar/SingleSeminar.jsx";
+import AddSeminar from "./Seminar/AddSeminar.jsx";
+import UpdateSeminar from "./Seminar/UpdateSeminar.jsx";
 
 
 
@@ -359,6 +363,28 @@ const router = createBrowserRouter([
         element: <AdminRoute>
           <UpdateCommittee />
           </AdminRoute>
+      },
+      {
+        path: '/seminar',
+        element: <Seminar></Seminar>
+      },
+      {
+        path: '/seminar/:id',
+        element: <PrivateRoute>
+          <SingleSeminar />
+        </PrivateRoute>
+      },
+      {
+        path: '/addSeminar',
+        element: <AdminRoute>
+          <AddSeminar></AddSeminar>
+        </AdminRoute>
+      },
+      {
+        path: '/updateSeminar',
+        element: <AdminRoute>
+          <UpdateSeminar></UpdateSeminar>
+        </AdminRoute>
       }
 
     ]
