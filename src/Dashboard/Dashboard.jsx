@@ -8,14 +8,14 @@ import { useUser } from '../../hooks/useUser';
 import { useDashboard } from '../../hooks/useDashboard';
 import { useNavigate } from 'react-router-dom';
 import Markdown from 'react-markdown';
-import { FaUser } from 'react-icons/fa6';
+import { FaGoogleDrive, FaUser } from 'react-icons/fa6';
 import { toast, ToastContainer } from 'react-toastify';
 // import { MarkdownConfig } from '../blog/Blog';
 import { AiFillPicture, AiOutlinePicture } from "react-icons/ai";
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { useGallery } from '../../hooks/useGallery';
 import { List } from 'react-window'
-import { Edit } from 'lucide-react';
+import { Edit, Presentation, Sliders, Trash } from 'lucide-react';
 
 const MarkdownConfig = {}
 
@@ -53,7 +53,9 @@ const Dashboard = () => {
         magazines,
         events,
         researches,
-        loading
+        loading,
+        slides,
+        getAllSlides
     } = useDashboard()
 
     const { deleteGallery, gallery, getAllGalleryPhoto } = useGallery()
@@ -61,8 +63,8 @@ const Dashboard = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [activeSection, setActiveSection] = useState('home');
     const [committee, setCommittee] = useState([]);
-    const [searchParams,setSeachParams] = useSearchParams();
-    const [data,setData] = useState();
+    const [searchParams, setSeachParams] = useSearchParams();
+    const [data, setData] = useState();
     const [searchTerm, setSearchTerm] = useState('');
 
 
@@ -88,28 +90,28 @@ const Dashboard = () => {
     })
 
     const getAbout = async () => {
-            try {
-                const response = await fetch(`${BASE_URL}/ieee`, {
-                })
-                const data = await response.json()
-                if(!response.ok){
-                    return
-                }
-                setIEEEabout({
-                    ActiveMember:data.ieee[0].ActiveMember,
-                    NumberofEvents:data.ieee[0].NumberofEvents,
-                    numofProjectCompleted:data.ieee[0].numofProjectCompleted,
-                    awardsWon:data.ieee[0].awardsWon,
-                    numofIndustryCollaboration:data.ieee[0].numofIndustryCollaboration,
-                    numofWorkshop:data.ieee[0].numofWorkshop,
-                    image:data.ieee[0].image
-
-                })
-                
-            } catch (error) {
-                console.log(error)
+        try {
+            const response = await fetch(`${BASE_URL}/ieee`, {
+            })
+            const data = await response.json()
+            if (!response.ok) {
+                return
             }
+            setIEEEabout({
+                ActiveMember: data.ieee[0].ActiveMember,
+                NumberofEvents: data.ieee[0].NumberofEvents,
+                numofProjectCompleted: data.ieee[0].numofProjectCompleted,
+                awardsWon: data.ieee[0].awardsWon,
+                numofIndustryCollaboration: data.ieee[0].numofIndustryCollaboration,
+                numofWorkshop: data.ieee[0].numofWorkshop,
+                image: data.ieee[0].image
+
+            })
+
+        } catch (error) {
+            console.log(error)
         }
+    }
 
     // Mock users data
     // const users = [
@@ -427,6 +429,7 @@ const Dashboard = () => {
             getUser(),
             getAllResearches(),
             getAllUser(),
+            getAllSlides(),
             getallMessage(),
             getAllBlogs(),
             getAllMagazines(),
@@ -467,7 +470,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('home');
-                                    setSeachParams({path:'home'})
+                                    setSeachParams({ path: 'home' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'home' ? 'bg-blue-700' : ''}`}
                             >
@@ -479,7 +482,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('research');
-                                    setSeachParams({path:'research'})
+                                    setSeachParams({ path: 'research' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'research' ? 'bg-blue-700' : ''}`}
                             >
@@ -491,7 +494,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('magazine');
-                                    setSeachParams({path:'magazine'})
+                                    setSeachParams({ path: 'magazine' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'magazine' ? 'bg-blue-700' : ''}`}
                             >
@@ -503,7 +506,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('event');
-                                    setSeachParams({path:'event'})
+                                    setSeachParams({ path: 'event' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'event' ? 'bg-blue-700' : ''}`}
                             >
@@ -515,7 +518,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('banner');
-                                    setSeachParams({path:'banner'})
+                                    setSeachParams({ path: 'banner' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'event' ? 'bg-blue-700' : ''}`}
                             >
@@ -526,8 +529,20 @@ const Dashboard = () => {
                         <li>
                             <button
                                 onClick={() => {
+                                    setActiveSection('presentation');
+                                    setSeachParams({ path: 'presentation' })
+                                }}
+                                className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'event' ? 'bg-blue-700' : ''}`}
+                            >
+                                <Presentation className="text-xl" />
+                                {isSidebarOpen && <span className="ml-4">Presentation slides</span>}
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                onClick={() => {
                                     setActiveSection('blog');
-                                    setSeachParams({path:'blog'})
+                                    setSeachParams({ path: 'blog' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'blog' ? 'bg-blue-700' : ''}`}
                             >
@@ -539,7 +554,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('news');
-                                    setSeachParams({path: 'news'});
+                                    setSeachParams({ path: 'news' });
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'news' ? 'bg-blue-700' : ''}`}
                             >
@@ -551,7 +566,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('gallery');
-                                    setSeachParams({path:'gallery'})
+                                    setSeachParams({ path: 'gallery' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'gallery' ? 'bg-blue-700' : ''}`}
                             >
@@ -563,7 +578,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('users');
-                                    setSeachParams({path:'users'})
+                                    setSeachParams({ path: 'users' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'users' ? 'bg-blue-700' : ''}`}
                             >
@@ -575,7 +590,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('contacts');
-                                    setSeachParams({path:'contacts'})
+                                    setSeachParams({ path: 'contacts' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'contacts' ? 'bg-blue-700' : ''}`}
                             >
@@ -587,7 +602,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('committee');
-                                    setSeachParams({path:'committee'})
+                                    setSeachParams({ path: 'committee' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'committee' ? 'bg-blue-700' : ''}`}
                             >
@@ -599,7 +614,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('achievements');
-                                    setSeachParams({path:'achievements'})
+                                    setSeachParams({ path: 'achievements' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'achievements' ? 'bg-blue-700' : ''}`}
                             >
@@ -611,7 +626,7 @@ const Dashboard = () => {
                             <button
                                 onClick={() => {
                                     setActiveSection('statistics');
-                                    setSeachParams({path:'statistics'})
+                                    setSeachParams({ path: 'statistics' })
                                 }}
                                 className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'statistics' ? 'bg-blue-700' : ''}`}
                             >
@@ -942,6 +957,88 @@ const Dashboard = () => {
                         </div>
                     )}
 
+                    {activeSection === 'presentation' && (
+                        <div className="bg-white rounded-lg shadow-md p-6">
+                            <h1 className="text-2xl font-semibold text-gray-800">Presentation Slide Management</h1>
+                            <p className="text-gray-600 mt-1 mb-6">Manage IEEE CS LU SB Chapter Presentation Slides here</p>
+
+                            <div className="flex items-center mb-6 gap-2 flex-wrap">
+                                <Link to="/addSeminar" className="bg-[#045C99] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                                    Add Presentation Slide
+                                </Link>
+                            </div>
+                            {/* Events Items */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {/* Upcoming Event Card */}
+                                {slides?.length > 0 ? slides?.map((slide, index) => {
+                                    return <div className="relative" key={index}>
+
+
+
+
+                                        <div className="flex justify-between absolute z-10 right-0 top-0">
+                                            {/* <Link to={`/updateEvent?id=${slide._id}`} className="bg-blue-50 text-[#045C99] px-3 py-1 rounded border border-blue-200 hover:bg-blue-100 transition">
+                                                Update
+                                            </Link> */}
+                                            <button onClick={() => deleteEvent(slide._id)} className="bg-red-50 text-red-600 px-3 py-1 rounded border border-red-200 hover:bg-red-100 transition cursor-pointer">
+                                                <Trash size={20} />
+                                            </button>
+                                        </div>
+                                        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 relative">
+
+                                            
+                                            <div>
+                                                <img src={`${slide?.thumbnail}`} className='w-full object-fit h-70' />
+                                            </div>
+                                            {/* <div className="absolute top-2 right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">
+                                            {event.isFeatured === true ? 'Featured' : "Latest"}
+                                        </div>
+                                        <div className="absolute bottom-2 left-2 bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">
+                                            {event.status}
+                                        </div> */}
+                                        </div>
+                                        <div className="p-4">
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-2">{slide.title}</h3>
+                                            <div className="flex items-center text-sm text-gray-600 mb-3">
+                                                <FaCalendarAlt className="mr-1" />
+                                                <span>{new Date(slide.date).toDateString()}</span>
+                                            </div>
+                                            <div className="flex items-center text-sm text-gray-600 mb-3">
+                                                <FaMapMarkerAlt className="mr-1" />
+                                                <span className="line-clamp-1">{slide.location}</span>
+                                            </div>
+                                            <div>Speaker : {slide.speakerName}</div>
+                                            <div>{parseInt(slide?.time?.split(":")[0]) > 12 ? parseInt(slide?.time?.split(":")[0]) - 12 + ":" + slide?.time.split(":")[1] : slide?.time} {parseInt(slide?.time?.split(":")[0]) > 12 ? 'PM' : 'AM'}</div>
+                                            <div className="text-sm text-gray-600 mb-3 line-clamp-1">
+                                                <p>{slide.description}</p>
+                                            </div>
+
+                                            {slide?.drivelink && (
+                                                <a
+                                                    href={slide?.drivelink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex-1 min-w-[140px] px-4 py-3 bg-green-600 text-white rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-green-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+                                                >
+                                                    <FaGoogleDrive className="text-lg" /> Materials
+                                                </a>
+                                            )}
+                                            {/* <div className="flex items-center text-sm text-gray-500 mb-4">
+                                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">{event.type}</span>
+                                            <span className="mx-2">•</span>
+                                            <span>Register link <a target="_blank" className="text-blue-500 hover:underline" href={event?.registrationLink}>{event?.registrationLink}</a></span>
+                                        </div> */}
+                                            
+                                        </div>
+                                    </div>
+                                })
+                                    :
+                                    <p>No banner found</p>}
+                            </div>
+
+                        </div>
+                    )}
+
                     {activeSection === 'blog' && (
                         <div className="bg-white rounded-lg shadow-md p-6">
                             <h1 className="text-2xl font-semibold text-gray-800">Blog Management</h1>
@@ -1073,7 +1170,7 @@ const Dashboard = () => {
                                     Upload Images
                                 </Link>
                             </div>
-                            
+
                             {/* Gallery Items */}
                             {gallery.length > 0 ? <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {/* Gallery Image 1 */}
@@ -1113,13 +1210,13 @@ const Dashboard = () => {
 
 
                             <div className="flex justify-between items-center mb-6 w-full">
-                                
-                                    <input
-                                        type="text"
-                                        placeholder="Search users by IEEE ID"
-                                        className="bg-gray-100 border border-gray-300 rounded-md px-4 w-full py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
+
+                                <input
+                                    type="text"
+                                    placeholder="Search users by IEEE ID"
+                                    className="bg-gray-100 border border-gray-300 rounded-md px-4 w-full py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
                                 {/* <button className="bg-[#045C99] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                                     Add New User
                                 </button> */}
@@ -1127,7 +1224,7 @@ const Dashboard = () => {
                             {/* Users Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {allUser?.map(user => (
-                                    user.IEEEID?.toLowerCase()?.includes(searchTerm.toLowerCase())&& <div key={user.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+                                    user.IEEEID?.toLowerCase()?.includes(searchTerm.toLowerCase()) && <div key={user.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
                                         <div className="p-6 flex flex-col items-center">
                                             {user?.profilePicture ? <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-blue-100">
                                                 <img
@@ -1220,28 +1317,28 @@ const Dashboard = () => {
                             <h1 className="text-2xl font-semibold text-gray-800">Committee Management</h1>
                             <p className="text-gray-600 mt-1 mb-6">Manage IEEE CS LU SB Chapter committee members information</p>
 
-                            
+
                             <div>
                                 {committee.map((member) => (
                                     <div key={member._id} className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex justify-between items-center hover:shadow-md transition-shadow">
 
                                         <a href={`/details?id=${member.IEEEID}&name=${member.name}&path=dashboard`}>
-                                        <div className="flex items-center flex-wrap">
-                                            <div className="mr-4">
-                                                {member.hosted_image ? <img
-                                                    src={member.hosted_image}
-                                                    alt={member.name}
-                                                    loading='lazy'
-                                                    className="w-12 h-12 rounded-full object-cover"
-                                                />: <FaUserCircle className="h-12 w-12 text-gray-400" />}
+                                            <div className="flex items-center flex-wrap">
+                                                <div className="mr-4">
+                                                    {member.hosted_image ? <img
+                                                        src={member.hosted_image}
+                                                        alt={member.name}
+                                                        loading='lazy'
+                                                        className="w-12 h-12 rounded-full object-cover"
+                                                    /> : <FaUserCircle className="h-12 w-12 text-gray-400" />}
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-medium text-lg text-gray-800">{member.name}</h3>
+                                                    <p>{member.CommitteeMemType}</p>
+                                                    <p className="text-gray-600 mt-1">{member.designation}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h3 className="font-medium text-lg text-gray-800">{member.name}</h3>
-                                                <p>{member.CommitteeMemType}</p>
-                                                <p className="text-gray-600 mt-1">{member.designation}</p>
-                                            </div>
-                                        </div>
-                                            </a>
+                                        </a>
                                         <div className="flex items-center space-x-4">
                                             <Link to={`/updateCommittee?id=${member._id}&name=${member.name}&path=committee`}><Edit size={18} /></Link>
                                             <button

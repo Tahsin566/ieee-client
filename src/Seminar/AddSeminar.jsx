@@ -4,10 +4,11 @@ import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaLink, FaImage, FaUser, FaBuil
 import { useUser } from '../../hooks/useUser';
 import { useNavigate } from 'react-router-dom';
 import { useSeminar } from '../../hooks/useSeminar';
+import { BASE_URL } from '../../constants';
 
 const AddSeminar = () => {
-    const { getUser, user, loading: userLoading } = useUser();
-    const { createSeminar, loading } = useSeminar();
+    const { loading: userLoading } = useUser();
+    const { AddPresentation, loading } = useSeminar();
     const navigate = useNavigate();
 
     const [bannerPreview, setBannerPreview] = useState(null);
@@ -20,13 +21,12 @@ const AddSeminar = () => {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        bannerImage: null,
         speakerName: '',
         speakerDesignation: '',
         speakerOrganization: '',
-        speakerPhoto: null,
         date: '',
         time: '',
+        image: null,
         location: '',
         driveLink: '',
         registrationLink: ''
@@ -44,7 +44,7 @@ const AddSeminar = () => {
     const handleBannerChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setFormData({ ...formData, bannerImage: file });
+            setFormData({ ...formData, image: file });
             const reader = new FileReader();
             reader.onloadend = () => {
                 setBannerPreview(reader.result);
@@ -68,7 +68,7 @@ const AddSeminar = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.title || !formData.description || !formData.bannerImage || 
+        if (!formData.title || !formData.description || 
             !formData.speakerName || !formData.speakerDesignation || 
             !formData.date || !formData.time || !formData.location) {
             toast.error("Please fill all required fields");
@@ -78,57 +78,57 @@ const AddSeminar = () => {
         const submitData = new FormData();
         submitData.append("title", formData.title);
         submitData.append("description", formData.description);
-        submitData.append("bannerImage", formData.bannerImage);
-        submitData.append("speaker", JSON.stringify({
-            name: formData.speakerName,
-            designation: formData.speakerDesignation,
-            organization: formData.speakerOrganization
-        }));
-        if (formData.speakerPhoto) {
-            submitData.append("speakerPhoto", formData.speakerPhoto);
-        }
+        submitData.append("speakerName", formData.speakerName);
+        submitData.append("speakerDesignation", formData.speakerDesignation);
+        submitData.append("speakerOrganization", formData.speakerOrganization);
+        submitData.append("image", formData.image);
         submitData.append("date", formData.date);
         submitData.append("time", formData.time);
         submitData.append("location", formData.location);
         submitData.append("type", seminarType);
         submitData.append("category", category);
-        submitData.append("status", status);
         submitData.append("isFeatured", isFeatured);
         submitData.append("driveLink", formData.driveLink);
-        submitData.append("registrationLink", formData.registrationLink);
 
-        const result = await createSeminar(submitData);
-        
-        if (result.success) {
-            setFormData({
-                title: '',
-                description: '',
-                bannerImage: null,
-                speakerName: '',
-                speakerDesignation: '',
-                speakerOrganization: '',
-                speakerPhoto: null,
-                date: '',
-                time: '',
-                location: '',
-                driveLink: '',
-                registrationLink: ''
-            });
-            setBannerPreview(null);
-            setSpeakerPhotoPreview(null);
-            setSeminarType('seminar');
-            setCategory('technical');
-            setStatus('upcoming');
-            setIsFeatured(false);
-            setTimeout(() => {
-                navigate('/dashboard');
-            }, 500);
+        // const result = await AddPresentation(submitData);
+
+        const response = await fetch(`${BASE_URL}/presentation/add`, {
+            method: 'POST',
+            credentials: "include",
+            body: submitData
+        });
+        const data = await response.json();
+        if (response.ok) {
+            toast.success('Seminar created successfully');
+            return { success: true, seminar: data.seminar };
+        } else {
+            toast.error(data.message || 'Failed to create seminar');
+            return { success: false };
         }
+        
+        // if (result?.success) {
+        //     setFormData({
+        //         title: '',
+        //         description: '',
+        //         bannerImage: null,
+        //         speakerName: '',
+        //         speakerDesignation: '',
+        //         speakerOrganization: '',
+        //         date: '',
+        //         time: '',
+        //         location: '',
+        //         driveLink: '',
+        //         registrationLink: ''
+        //     });
+        //     setSeminarType('seminar');
+        //     setCategory('technical');
+        //     setStatus('upcoming');
+        //     setIsFeatured(false);
+        //     setTimeout(() => {
+        //         navigate('/dashboard');
+        //     }, 500);
+        // }
     };
-
-    useEffect(() => {
-        getUser();
-    }, []);
 
     if (userLoading) {
         return (
@@ -152,7 +152,41 @@ const AddSeminar = () => {
                             <h3 className="text-xl font-semibold text-gray-700 border-b pb-2">Basic Information</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
+                        
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Title <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#045C99] focus:border-transparent"
+                                    placeholder="Enter seminar/webinar title"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Description <span className="text-red-500">*</span>
+                                </label>
+                                <textarea
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    rows="5"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#045C99] focus:border-transparent"
+                                    placeholder="Enter detailed description"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                            
+                            <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Type <span className="text-red-500">*</span>
                                     </label>
@@ -185,44 +219,16 @@ const AddSeminar = () => {
                                         ))}
                                     </select>
                                 </div>
-                            </div>
+                                </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Title <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    value={formData.title}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#045C99] focus:border-transparent"
-                                    placeholder="Enter seminar/webinar title"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Description <span className="text-red-500">*</span>
-                                </label>
-                                <textarea
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                    rows="5"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#045C99] focus:border-transparent"
-                                    placeholder="Enter detailed description"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Banner Image <span className="text-red-500">*</span>
+                                    Thumbnail <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex items-center space-x-4">
                                     <label className="flex items-center px-4 py-2 bg-[#045C99] text-white rounded-lg cursor-pointer hover:bg-[#034a7a]">
                                         <FaImage className="mr-2" />
-                                        Choose Banner
+                                        Choose image
                                         <input
                                             type="file"
                                             accept="image/*"
@@ -291,7 +297,7 @@ const AddSeminar = () => {
                                 </div>
                             </div>
 
-                            <div>
+                            {/* <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Speaker Photo
                                 </label>
@@ -310,7 +316,7 @@ const AddSeminar = () => {
                                         <img src={speakerPhotoPreview} alt="Speaker Preview" className="h-20 w-20 object-cover rounded-full" />
                                     )}
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Event Details */}
@@ -368,7 +374,7 @@ const AddSeminar = () => {
                                 </div>
                             </div>
 
-                            <div>
+                            {/* <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Status <span className="text-red-500">*</span>
                                 </label>
@@ -383,7 +389,7 @@ const AddSeminar = () => {
                                         </option>
                                     ))}
                                 </select>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Links */}
@@ -407,7 +413,7 @@ const AddSeminar = () => {
                                 </div>
                             </div>
 
-                            <div>
+                            {/* <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Registration Link
                                 </label>
@@ -422,7 +428,7 @@ const AddSeminar = () => {
                                         placeholder="https://forms.google.com/..."
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Featured Toggle */}

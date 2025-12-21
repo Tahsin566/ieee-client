@@ -138,33 +138,33 @@ export const useSeminar = () => {
         }
     };
 
-    // Create seminar (Admin)
-    const createSeminar = async (formData) => {
+    // Add seminar (Admin)
+    const AddPresentation = async (formData) => {
+
+        console.log(formData)
+
         setLoading(true);
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${BASE_URL}/seminar/create`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-            const data = await response.json();
-            if (response.ok) {
-                toast.success('Seminar created successfully');
-                return { success: true, seminar: data.seminar };
-            } else {
-                toast.error(data.message || 'Failed to create seminar');
-                return { success: false };
-            }
-        } catch (error) {
-            console.error('Error creating seminar:', error);
-            toast.error('Failed to create seminar');
-            return { success: false };
-        } finally {
-            setLoading(false);
-        }
+        // try {
+            
+        //     const response = await fetch(`${BASE_URL}/seminar/add`, {
+        //         method: 'POST',
+        //         body: formData
+        //     });
+        //     const data = await response.json();
+        //     if (response.ok) {
+        //         toast.success('Seminar created successfully');
+        //         return { success: true, seminar: data.seminar };
+        //     } else {
+        //         toast.error(data.message || 'Failed to create seminar');
+        //         return { success: false };
+        //     }
+        // } catch (error) {
+        //     console.error('Error creating seminar:', error);
+        //     toast.error('Failed to create seminar');
+        //     return { success: false };
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     // Update seminar (Admin)
@@ -236,7 +236,7 @@ export const useSeminar = () => {
         getSeminarsByType,
         getSeminarsByCategory,
         filterSeminarsByDate,
-        createSeminar,
+        AddPresentation,
         updateSeminar,
         deleteSeminar
     };

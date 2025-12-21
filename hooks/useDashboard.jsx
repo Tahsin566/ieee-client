@@ -15,6 +15,7 @@ export const useDashboard = () => {
     const [loading, setLoading] = useState(false)
     const [achievements, setAchievements] = useState([])
     const [banner, setBanner] = useState([])
+    const [slides,setSlides] = useState([])
 
 
     
@@ -186,6 +187,23 @@ export const useDashboard = () => {
             console.log(error);
             setLoading(false);
         }
+    }
+
+    const getAllSlides = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/presentation`, {
+                method: 'GET'
+            })
+            const data = await response.json()
+            console.log(data)
+            if (response.success === false) {
+                return
+            }
+            setSlides(data?.slides)
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     const deleteBlog = async (id) => {
@@ -453,6 +471,8 @@ export const useDashboard = () => {
         magazines,
         events,
         blogs,
-        researches
+        researches,
+        slides,
+        getAllSlides
     }
 }
