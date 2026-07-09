@@ -980,7 +980,7 @@ const Dashboard = () => {
                                             {/* <Link to={`/updateEvent?id=${slide._id}`} className="bg-blue-50 text-[#045C99] px-3 py-1 rounded border border-blue-200 hover:bg-blue-100 transition">
                                                 Update
                                             </Link> */}
-                                            <button onClick={() => deleteEvent(slide._id)} className="bg-red-50 text-red-600 px-3 py-1 rounded border border-red-200 hover:bg-red-100 transition cursor-pointer">
+                                            <button onClick={() =>{}} className="bg-red-50 text-red-600 px-3 py-1 rounded border border-red-200 hover:bg-red-100 transition cursor-pointer">
                                                 <Trash size={20} />
                                             </button>
                                         </div>
@@ -1033,7 +1033,7 @@ const Dashboard = () => {
                                     </div>
                                 })
                                     :
-                                    <p>No banner found</p>}
+                                    <p>No presentation materials found</p>}
                             </div>
 
                         </div>
@@ -1179,6 +1179,7 @@ const Dashboard = () => {
                                 {gallery.map((gallery, index) => (
                                     <div className="relative group">
                                         <img
+                                            loading="lazy"
                                             src={`${gallery.image}`}
                                             alt="IEEE Conference"
                                             className="h-48 w-full object-cover rounded-lg"

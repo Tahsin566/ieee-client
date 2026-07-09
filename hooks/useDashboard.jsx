@@ -195,7 +195,7 @@ export const useDashboard = () => {
                 method: 'GET'
             })
             const data = await response.json()
-            console.log(data)
+            
             if (response.success === false) {
                 return
             }

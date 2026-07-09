@@ -31,6 +31,7 @@ const Gallery = () => {
             className="rounded-[10px_0_10px_0] shadow-md overflow-hidden bg-white group transition-transform duration-300 hover:scale-[1.03]"
           >
             <img
+              loading="lazy"
               src={`${img.image}`}
               alt={`Gallery ${index + 1}`}
               className="w-full h-[250px] object-cover p-2 transition-transform duration-300 group-hover:scale-105"

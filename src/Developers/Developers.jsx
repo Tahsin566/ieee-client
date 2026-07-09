@@ -8,7 +8,7 @@ import { FaFacebook } from 'react-icons/fa6';
 const WebMasters = [
   {
     name: 'Lukman Hossain',
-    role: 'Web Master(23-24)',
+    role: 'Webmaster(23-24)',
     img: './img/Lukman Hossain.jpg',
     facebook: 'https://www.facebook.com/lukmanhossain01',
     linkedin: 'https://www.linkedin.com/in/lukmanofficial/',
@@ -16,14 +16,14 @@ const WebMasters = [
   },
   {
     name: 'Iftekhar Ahmed',
-    role: 'Web Master(23-24)',
+    role: 'Webmaster(23-24)',
     img: './img/iftekhar.jpg',
     facebook: 'https://www.facebook.com/Lord.Madara.007',
     linkedin: 'https://www.linkedin.com/in/iftekhar-ifat/',
   },
   {
     name: 'Mahfuz Alam Chowdhury',
-    role: 'Web Master(24-25)',
+    role: 'Webmaster(24-25)',
     img: './img/mahfuzzzzzzzz.jpg',
     facebook: 'https://www.facebook.com/mahfuz.mahfuz.5688',
     linkedin: 'https://www.linkedin.com/in/md-mahfuz-alam-chowdhury-b25023235',

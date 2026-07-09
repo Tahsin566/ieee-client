@@ -141,8 +141,6 @@ export const useSeminar = () => {
     // Add seminar (Admin)
     const AddPresentation = async (formData) => {
 
-        console.log(formData)
-
         setLoading(true);
         // try {
             
