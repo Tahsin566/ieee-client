@@ -520,7 +520,7 @@ const Dashboard = () => {
                                     setActiveSection('banner');
                                     setSeachParams({ path: 'banner' })
                                 }}
-                                className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'banner' ? 'bg-red-700' : ''}`}
+                                className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'banner' ? 'bg-blue-700' : ''}`}
                             >
                                 <AiFillPicture className="text-xl" />
                                 {isSidebarOpen && <span className="ml-4">Banners</span>}
@@ -532,7 +532,7 @@ const Dashboard = () => {
                                     setActiveSection('presentation');
                                     setSeachParams({ path: 'presentation' })
                                 }}
-                                className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'presentation' ? 'bg-red-700' : ''}`}
+                                className={`flex items-center w-full p-3 rounded-lg hover:bg-blue-700 transition duration-200 ${activeSection === 'presentation' ? 'bg-blue-700' : ''}`}
                             >
                                 <Presentation className="text-xl" />
                                 {isSidebarOpen && <span className="ml-4">Presentation slides</span>}
