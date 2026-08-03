@@ -55,7 +55,7 @@ const Excom = () => {
     return (
         <div>
             <section className="text-center mb-10">
-                <h1 className="text-3xl font-bold mt-10 text-[#045C99]">Current Executive Committee Members (2025-2026)</h1>
+                <h1 className="text-3xl font-bold mt-10 text-[#045C99]">Current Executive Committee Members</h1>
                 <p className="text-gray-600">Leading Innovation and Technology Excellence</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-6">
                     {Excomm?.map((m, idx) => <MemberCard key={idx} {...m} />)}
